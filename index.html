@@ -72,19 +72,17 @@
         class Select extends React.Component {
             constructor(props) {
                 super(props);
-                this.state = { choices: [], choice: [] };
+                this.state = { choices: [] };
             }
-            render() {
+            componentDidMount() {
                 this.props.questions.map((e, i) => {
                     this.state.choices.push(e.choices)
+                    this.setState({ choices: this.state.choices })
+
                 })
                 console.log(this.state.choices)
-                this.state.choices.map((e) => {
-                    this.state.choice.push(e)
-                })
-                this.state.choice.map((e) => {
-                    console.log(e)
-                })
+            }
+            render() {
                 return (
                     <div>
                         <label>{this.props.questions.map((e, i) => {
@@ -93,7 +91,7 @@
                             }
                         })}
                             <select>
-                                {this.state.choice.map((e, i) => {
+                                {this.state.choices.map((e, i) => {
                                     return <option key={i} value={i}>{e}</option>
                                 })}
                             </select>
@@ -102,11 +100,23 @@
             }
         }
         class Radio extends React.Component {
+            constructor(props) {
+                super(props);
+            }
             render() {
-                <div className="container">
-                    {this.props.children}
-                </div>
-
+                return (
+                    <div>
+                        <label>{this.props.questions.map((e, i) => {
+                            if (e.type === 'radio') {
+                                return
+                                <div>
+                                    <h2 key={i} value={i}> {e.title}</h2>
+                                    <input type="radio" key={i} value={i}>{e.tile}</input>
+                                </div>
+                            }
+                        })}</label>
+                    </div>
+                )
             }
         }
 
@@ -142,9 +152,10 @@
                             <p>Voici un QCM sur React répondez aux questions ci-dessous,
                                 pensez à laisser votre email, champ obligatoire (*) :</p>
                             <h1>QCM React</h1>
-                            <Input title="Coucou" />
-                            <Form questions={questions} />
+                            <Input title="Votre email" />
                             <Select questions={questions} />
+                            <Radio questions={questions} />
+                            <Form questions={questions} />
                         </Wrapper>
 
                     </div>
