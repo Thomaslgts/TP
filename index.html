@@ -14,8 +14,8 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
-        const questions = {
-            'symfony': {
+        const questions = [
+            {
                 title: "Symfony design pattern",
                 choices: ['MMV', 'MVC', 'MMVV'],
                 response: 1,
@@ -23,7 +23,7 @@
                 name: "symfony",
                 feedback: 'Symfony est basé sur le pattern MVC'
             },
-            'react': {
+            {
                 title: "React est-il un framework ?",
                 choices: ['yes', 'no'],
                 response: 1,
@@ -31,7 +31,7 @@
                 name: "react",
                 feedback: "React est une librairie"
             },
-            'jsx': {
+            {
                 title: "JSX c'est quoi ?",
                 choices: ['JSX est un langage compilé', 'JSX est un sur-ensemble développé par Facebook'],
                 response: 1,
@@ -39,7 +39,7 @@
                 name: "jsx",
                 feedback: 'JSX est un sur ensemble à JS'
             }
-        }
+        ]
 
         const container = document.getElementById('root');
 
@@ -72,15 +72,29 @@
         class Select extends React.Component {
             constructor(props) {
                 super(props);
-                this.state = { question: '' };
+                this.state = { choices: [], choice: [] };
             }
             render() {
+                this.props.questions.map((e, i) => {
+                    this.state.choices.push(e.choices)
+                })
+                console.log(this.state.choices)
+                this.state.choices.map((e) => {
+                    this.state.choice.push(e)
+                })
+                this.state.choice.map((e) => {
+                    console.log(e)
+                })
                 return (
                     <div>
-                        <label>{this.props.title}
+                        <label>{this.props.questions.map((e, i) => {
+                            if (e.type === "select") {
+                                return <h2 key={i} value={i}> {e.title} </h2>
+                            }
+                        })}
                             <select>
-                                {this.props.questions.map((e, i) => {
-                                    <option key={i} value={i}>{e}</option>
+                                {this.state.choice.map((e, i) => {
+                                    return <option key={i} value={i}>{e}</option>
                                 })}
                             </select>
                         </label>
@@ -92,13 +106,13 @@
                 <div className="container">
                     {this.props.children}
                 </div>
+
             }
         }
 
         class Form extends React.Component {
             constructor(props) {
                 super(props);
-                this.state = { question: '' };
                 this.handleSubmit = this.handleSubmit.bind(this);
             }
             handleSubmit(event) {
@@ -107,10 +121,8 @@
                  this.setState({
                      users: this.state.users,
                  }) */
-                this.setState({
-                    question: this.props.questions
-                })
-                console.log(this.state.question)
+                this.props.questions.map((e, i) =>
+                    console.log(e.title))
             }
             render() {
                 return (
@@ -132,6 +144,7 @@
                             <h1>QCM React</h1>
                             <Input title="Coucou" />
                             <Form questions={questions} />
+                            <Select questions={questions} />
                         </Wrapper>
 
                     </div>
