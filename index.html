@@ -14,11 +14,6 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
-        class Wrapper extends React.Component {
-            render() {
-
-            }
-        }
         const questions = {
             'symfony': {
                 title: "Symfony design pattern",
@@ -45,41 +40,82 @@
                 feedback: 'JSX est un sur ensemble à JS'
             }
         }
+
+        const container = document.getElementById('root');
+
+        class Wrapper extends React.Component {
+            render() {
+                return (<div className="container">
+                    {this.props.children}
+                </div>);
+            }
+        }
+        class Input extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { email: '' };
+                this.handleChange = this.handleChange.bind(this);
+            }
+            handleChange(event) {
+                console.log(event.target.value)
+                this.setState({ email: event.target.value })
+            }
+            render() {
+                return (
+                    <div>
+                        <label>{this.props.title}
+                            <input type="text" value={this.state.value} onChange={this.handleChange} />
+                        </label>
+                    </div>);
+            }
+        }
+        class Select extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { question: '' };
+            }
+            render() {
+                return (
+                    <div>
+                        <label>{this.props.title}
+                            <select>
+                                {this.props.questions.map((e, i) => {
+                                    <option key={i} value={i}>{e}</option>
+                                })}
+                            </select>
+                        </label>
+                    </div>);
+            }
+        }
+        class Radio extends React.Component {
+            render() {
+                <div className="container">
+                    {this.props.children}
+                </div>
+            }
+        }
+
         class Form extends React.Component {
             constructor(props) {
                 super(props);
-                this.state = { value: '', users: [] };
-                this.handleChange = this.handleChange.bind(this);
+                this.state = { question: '' };
                 this.handleSubmit = this.handleSubmit.bind(this);
             }
-
-            handleChange(event) {
-                console.log(event.target.value)
-                this.setState({ value: event.target.value });
-            }
-
             handleSubmit(event) {
                 event.preventDefault();
-                // Array qui contient 5 prénoms
-                this.state.users.push(this.state.value)
+                /*  this.state.users.push(this.state.value)
+                 this.setState({
+                     users: this.state.users,
+                 }) */
                 this.setState({
-                    users: this.state.users,
+                    question: this.props.questions
                 })
-                console.log(this.state.users)
+                console.log(this.state.question)
             }
             render() {
                 return (
                     <form onSubmit={this.handleSubmit}>
-                        <label>
-                            Username:
-                            <input type="text" value={this.state.value} onChange={this.handleChange} />
-                        </label>
-                        <input type="submit" value="Add user" />
-                        <p>Utilisateurs créés :
-                            {this.state.users.map((e, i) => {
-                                return <p key={i}>{e}</p>
-                            }
-                            )}</p>
+                        <input type="submit" value="Valider l'ensemble des question" />
                     </form>
                 );
             }
@@ -89,8 +125,15 @@
             render() {
                 return (
                     <div>
-                        <BaseNumberInput name="Décimale" onChangeBase={(e) => this.handleChange(e)} />
-                        <BaseNumberInput name="Binaire" onChangeBase={(e) => this.handleChange(e)} />
+
+                        <Wrapper>
+                            <p>Voici un QCM sur React répondez aux questions ci-dessous,
+                                pensez à laisser votre email, champ obligatoire (*) :</p>
+                            <h1>QCM React</h1>
+                            <Input title="Coucou" />
+                            <Form questions={questions} />
+                        </Wrapper>
+
                     </div>
                 )
             }
