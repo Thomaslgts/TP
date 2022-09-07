@@ -78,7 +78,6 @@
                 this.props.questions.map((e, i) => {
                     this.state.choices.push(e.choices)
                     this.setState({ choices: this.state.choices })
-
                 })
                 console.log(this.state.choices)
             }
@@ -86,7 +85,7 @@
                 return (
                     <div>
                         <label>{this.props.questions.map((e, i) => {
-                            if (e.type === "select") {
+                            if (e.type != "select") {
                                 return <h2 key={i} value={i}> {e.title} </h2>
                             }
                         })}
